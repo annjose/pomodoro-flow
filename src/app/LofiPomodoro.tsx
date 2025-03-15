@@ -126,7 +126,7 @@ const LofiPomodoro = () => {
 
     // Change theme
     const cycleTheme = () => {
-        const themes = ["sunset", "midnight", "forest", "ocean"];
+        const themes = ["synthwave", "cafe", "cosmic", "minimal"];
         const currentIndex = themes.indexOf(theme);
         const nextIndex = (currentIndex + 1) % themes.length;
         setTheme(themes[nextIndex]);
@@ -134,83 +134,109 @@ const LofiPomodoro = () => {
 
     return (
         <div
-            className={`min-h-screen flex justify-center items-center transition-colors duration-2000 ${
-                theme === "sunset"
-                    ? "bg-gradient-to-tr from-yellow-400 to-red-500 text-yellow-900"
-                    : theme === "midnight"
-                    ? "bg-gradient-to-tr from-purple-800 to-black text-white"
-                    : theme === "forest"
-                    ? "bg-gradient-to-tr from-green-600 to-green-900 text-green-100"
-                    : "bg-gradient-to-tr from-blue-600 to-blue-900 text-blue-100"
+            className={`min-h-screen flex flex-col justify-center items-center transition-colors duration-2000 ${
+                theme === "synthwave"
+                    ? "bg-gradient-to-br from-purple-900 via-fuchsia-800 to-pink-700 text-pink-200"
+                    : theme === "cafe"
+                    ? "bg-gradient-to-br from-amber-800 via-amber-700 to-yellow-600 text-amber-100"
+                    : theme === "cosmic"
+                    ? "bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-800 text-cyan-200"
+                    : "bg-gradient-to-br from-neutral-200 via-gray-200 to-neutral-300 text-gray-800"
             }`}
         >
-            <div className="bg-white/15 backdrop-blur-md rounded-3xl p-8 shadow-lg w-11/12 max-w-md text-center">
-                <h1 className="text-3xl font-bold tracking-tight m-0">
-                    Lofi Pomodoro
-                </h1>
-
-                <div className="flex bg-white/10 rounded-2xl p-1 mt-6">
-                    <button
-                        className={`flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all ${
-                            mode === "pomodoro"
-                                ? "bg-white/25 font-semibold"
-                                : ""
-                        }`}
-                        onClick={() => changeMode("pomodoro")}
-                    >
-                        Focus
-                    </button>
-                    <button
-                        className={`flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all ${
-                            mode === "shortBreak"
-                                ? "bg-white/25 font-semibold"
-                                : ""
-                        }`}
-                        onClick={() => changeMode("shortBreak")}
-                    >
-                        Short Break
-                    </button>
-                    <button
-                        className={`flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all ${
-                            mode === "longBreak"
-                                ? "bg-white/25 font-semibold"
-                                : ""
-                        }`}
-                        onClick={() => changeMode("longBreak")}
-                    >
-                        Long Break
-                    </button>
+            <div className="bg-white/10 backdrop-blur-md rounded-3xl shadow-2xl w-11/12 max-w-4xl min-h-[600px] flex flex-col overflow-hidden">
+                {/* Header */}
+                <div className="p-6 border-b border-white/20 flex justify-between items-center">
+                    <h1 className="text-4xl font-extrabold tracking-tight">
+                        Lofi Pomodoro
+                    </h1>
+                    <div className="flex items-center gap-3">
+                        <span className="text-xs opacity-60 italic">
+                            {theme.charAt(0).toUpperCase() + theme.slice(1)} vibe
+                        </span>
+                        <button
+                            onClick={cycleTheme}
+                            className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl text-sm font-medium transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                        >
+                            Change Vibe
+                        </button>
+                    </div>
                 </div>
+                
+                {/* Main content */}
+                <div className="flex-grow flex flex-col justify-center items-center p-8">
+                    {/* Timer display */}
+                    <div className="mb-12 text-center">
+                        <div className={`text-9xl font-bold tabular-nums leading-none tracking-tight mb-4 ${isActive ? 'animate-pulse' : ''}`}>
+                            {formatTime()}
+                        </div>
+                        <div className="flex gap-3 justify-center mb-8">
+                            {[...Array(4)].map((_, i) => (
+                                <div 
+                                    key={i}
+                                    className={`w-4 h-4 rounded-full ${i < completedPomodoros % 4 ? 'bg-white' : 'bg-white/20'}`}
+                                ></div>
+                            ))}
+                        </div>
+                        <div className="text-xl opacity-75">
+                            {mode === "pomodoro" ? "Focus Time" : mode === "shortBreak" ? "Short Break" : "Long Break"}
+                        </div>
+                    </div>
 
-                <div className="my-10 animate-pulse">
-                    <div className="text-8xl font-bold tabular-nums leading-none tracking-tighter">
-                        {formatTime()}
+                    {/* Control buttons */}
+                    <div className="flex gap-4 w-full max-w-md">
+                        <button
+                            onClick={toggleTimer}
+                            className="flex-1 py-6 px-8 rounded-2xl text-xl font-semibold cursor-pointer transition-all bg-white/25 hover:bg-white/40 shadow-lg"
+                        >
+                            {isActive ? "Pause" : "Start"}
+                        </button>
+                        <button
+                            onClick={resetTimer}
+                            className="flex-1 py-6 px-8 rounded-2xl text-xl font-semibold cursor-pointer transition-all bg-white/15 hover:bg-white/25 shadow-lg"
+                        >
+                            Reset
+                        </button>
                     </div>
                 </div>
 
-                <div className="flex gap-4 mb-6">
-                    <button
-                        onClick={toggleTimer}
-                        className="flex-1 py-4 px-5 rounded-2xl text-lg font-semibold cursor-pointer transition-all bg-white/40 hover:bg-white/50"
-                    >
-                        {isActive ? "Pause" : "Start"}
-                    </button>
-                    <button
-                        onClick={resetTimer}
-                        className="flex-1 py-4 px-5 rounded-2xl text-lg font-semibold cursor-pointer transition-all bg-white/20 hover:bg-white/30"
-                    >
-                        Reset
-                    </button>
-                </div>
-
-                <div className="flex justify-between items-center text-sm">
-                    <span>Completed: {completedPomodoros}</span>
-                    <button
-                        onClick={cycleTheme}
-                        className="bg-white/30 hover:bg-white/50 px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
-                    >
-                        Change Vibe
-                    </button>
+                {/* Footer */}
+                <div className="p-6 border-t border-white/20 flex justify-between items-center">
+                    <div>
+                        <span className="font-medium">Total: {completedPomodoros}</span>
+                    </div>
+                    <div className="flex bg-white/10 rounded-xl p-1">
+                        <button
+                            className={`py-2 px-4 rounded-lg text-sm font-medium transition-all ${
+                                mode === "pomodoro"
+                                    ? "bg-white/20 font-semibold"
+                                    : ""
+                            }`}
+                            onClick={() => changeMode("pomodoro")}
+                        >
+                            Focus
+                        </button>
+                        <button
+                            className={`py-2 px-4 rounded-lg text-sm font-medium transition-all ${
+                                mode === "shortBreak"
+                                    ? "bg-white/20 font-semibold"
+                                    : ""
+                            }`}
+                            onClick={() => changeMode("shortBreak")}
+                        >
+                            Short Break
+                        </button>
+                        <button
+                            className={`py-2 px-4 rounded-lg text-sm font-medium transition-all ${
+                                mode === "longBreak"
+                                    ? "bg-white/20 font-semibold"
+                                    : ""
+                            }`}
+                            onClick={() => changeMode("longBreak")}
+                        >
+                            Long Break
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
