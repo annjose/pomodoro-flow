@@ -10,7 +10,7 @@ interface TimerSettings {
     longBreak: number;
 }
 
-const LofiPomodoro = () => {
+const PomodoroFlow = () => {
     // Timer settings in minutes
     const timerSettings: TimerSettings = {
         pomodoro: 25,
@@ -148,7 +148,7 @@ const LofiPomodoro = () => {
                 {/* Header */}
                 <div className="p-6 border-b border-white/20 flex justify-between items-center">
                     <h1 className="text-4xl font-extrabold tracking-tight">
-                        Lofi Pomodoro
+                        Pomodoro Flow
                     </h1>
                     <div className="flex items-center gap-3">
                         <span className="text-xs opacity-60 italic">
@@ -243,4 +243,4 @@ const LofiPomodoro = () => {
     );
 };
 
-export default LofiPomodoro;
+export default PomodoroFlow;

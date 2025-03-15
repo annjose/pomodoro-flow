@@ -1,5 +1,5 @@
-import LofiPomodoro from "./LofiPomodoro"
+import PomodoroFlow from './PomodoroFlow';
 
 export default function Home() {
-  return <LofiPomodoro />;
+  return <PomodoroFlow />;
 }
