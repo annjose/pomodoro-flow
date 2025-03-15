@@ -121,9 +121,10 @@ const PomodoroFlow = () => {
     // Change timer mode
     const changeMode = (newMode: TimerMode) => {
         buttonClickSound.current?.play();
-        setIsActive(false);
+        setIsActive(false); // First pause the current timer
         setMode(newMode);
 
+        // Set the appropriate time based on the selected mode
         switch (newMode) {
             case "pomodoro":
                 setTimeLeft(timerSettings.pomodoro * 60);
@@ -135,6 +136,11 @@ const PomodoroFlow = () => {
                 setTimeLeft(timerSettings.longBreak * 60);
                 break;
         }
+
+        // Automatically start the timer after a short delay
+        setTimeout(() => {
+            setIsActive(true);
+        }, 300);
     };
 
     // Toggle timer
