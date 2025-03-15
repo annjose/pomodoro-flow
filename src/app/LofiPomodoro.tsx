@@ -30,8 +30,10 @@ const LofiPomodoro = () => {
 
     // Initialize audio on client side only
     useEffect(() => {
-        timerCompleteSound.current = new Audio("/sounds/complete.mp3");
-        buttonClickSound.current = new Audio("/sounds/click.mp3");
+        // Click sound by dersuperanton -- https://freesound.org/s/433641/ -- License: Attribution 4.0
+        // tada2.wav by jobro -- https://freesound.org/s/60444/ -- License: Attribution 3.0
+        timerCompleteSound.current = new Audio("/sounds/complete.wav");
+        buttonClickSound.current = new Audio("/sounds/click.wav");
     }, []);
 
     // Timer effect
