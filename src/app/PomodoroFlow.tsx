@@ -39,7 +39,7 @@ const PomodoroFlow = () => {
     const [timeLeft, setTimeLeft] = useState(0); // Start with 0 and let the useEffect set it correctly
     const [isActive, setIsActive] = useState(false);
     const [completedPomodoros, setCompletedPomodoros] = useState(0);
-    const [theme, setTheme] = useState<string>("sunset");
+    const [theme, setTheme] = useState<string>("minimal");
 
     // Sound effects
     const timerCompleteSound = useRef<HTMLAudioElement | null>(null);
@@ -169,7 +169,7 @@ const PomodoroFlow = () => {
 
     // Change theme
     const cycleTheme = () => {
-        const themes = ["synthwave", "cafe", "cosmic", "minimal"];
+        const themes = ["synthwave", "cafe", "cosmic", "minimal", "lofi", "forest"];
         const currentIndex = themes.indexOf(theme);
         const nextIndex = (currentIndex + 1) % themes.length;
         setTheme(themes[nextIndex]);
@@ -184,7 +184,11 @@ const PomodoroFlow = () => {
                     ? "bg-gradient-to-br from-amber-800 via-amber-700 to-yellow-600 text-amber-100"
                     : theme === "cosmic"
                     ? "bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-800 text-cyan-200"
-                    : "bg-gradient-to-br from-neutral-200 via-gray-200 to-neutral-300 text-gray-800"
+                    : theme === "minimal"
+                    ? "bg-gradient-to-br from-neutral-200 via-gray-200 to-neutral-300 text-gray-800"
+                    : theme === "lofi"
+                    ? "bg-gradient-to-br from-slate-700 via-slate-600 to-zinc-700 text-slate-200"
+                    : "bg-gradient-to-br from-green-700 via-emerald-600 to-teal-500 text-emerald-100"
             }`}
         >
             <div className="bg-white/10 backdrop-blur-md rounded-3xl shadow-2xl w-11/12 max-w-4xl min-h-[600px] flex flex-col overflow-hidden">
