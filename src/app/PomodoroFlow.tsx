@@ -11,15 +11,32 @@ interface TimerSettings {
 }
 
 const PomodoroFlow = () => {
+    // Check for debug mode from query parameter
+    const [isDebugMode, setIsDebugMode] = useState(false);
+    
+    // Effect to check for debug parameter in URL and set initial timer values
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const urlParams = new URLSearchParams(window.location.search);
+            const debugParam = urlParams.get('debug');
+            const isDebug = debugParam === 'true' || debugParam === '1';
+            setIsDebugMode(isDebug);
+            
+            // Reset timer with updated debug mode
+            const timerDuration = isDebug ? 60 : 25 * 60; // 1 min or 25 min in seconds
+            setTimeLeft(timerDuration);
+        }
+    }, []);
+    
     // Timer settings in minutes
     const timerSettings: TimerSettings = {
-        pomodoro: 25,
-        shortBreak: 5,
-        longBreak: 15,
+        pomodoro: isDebugMode ? 1 : 25, // 1 minute in debug mode, 25 minutes normally
+        shortBreak: isDebugMode ? 1/6 : 5, // 10 seconds in debug mode, 5 minutes normally
+        longBreak: isDebugMode ? 2/6 : 15, // 20 seconds in debug mode, 15 minutes normally
     };
 
     const [mode, setMode] = useState<TimerMode>("pomodoro");
-    const [timeLeft, setTimeLeft] = useState(timerSettings.pomodoro * 60);
+    const [timeLeft, setTimeLeft] = useState(0); // Start with 0 and let the useEffect set it correctly
     const [isActive, setIsActive] = useState(false);
     const [completedPomodoros, setCompletedPomodoros] = useState(0);
     const [theme, setTheme] = useState<string>("sunset");
@@ -71,6 +88,26 @@ const PomodoroFlow = () => {
             if (interval) clearInterval(interval);
         };
     }, [isActive, timeLeft, mode, completedPomodoros, timerSettings]);
+
+    // Update timeLeft when timerSettings or mode changes
+    useEffect(() => {
+        let duration = 0;
+        switch (mode) {
+            case "pomodoro":
+                duration = timerSettings.pomodoro * 60;
+                break;
+            case "shortBreak":
+                duration = timerSettings.shortBreak * 60;
+                break;
+            case "longBreak":
+                duration = timerSettings.longBreak * 60;
+                break;
+        }
+        
+        if (!isActive) {
+            setTimeLeft(duration);
+        }
+    }, [timerSettings, mode, isDebugMode]);
 
     // Format time as mm:ss
     const formatTime = () => {
@@ -178,7 +215,7 @@ const PomodoroFlow = () => {
                                 ></div>
                             ))}
                         </div>
-                        <div className="text-xl opacity-75">
+                        <div className="text-2xl font-semibold px-4 py-2 rounded-lg bg-white/10 inline-block">
                             {mode === "pomodoro" ? "Focus Time" : mode === "shortBreak" ? "Short Break" : "Long Break"}
                         </div>
                     </div>
@@ -202,7 +239,7 @@ const PomodoroFlow = () => {
 
                 {/* Footer */}
                 <div className="p-6 border-t border-white/20 flex justify-between items-center">
-                    <div>
+                    <div className="flex items-center gap-3">
                         <span className="font-medium">Total: {completedPomodoros}</span>
                     </div>
                     <div className="flex bg-white/10 rounded-xl p-1">
