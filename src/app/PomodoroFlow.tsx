@@ -30,9 +30,9 @@ const PomodoroFlow = () => {
     
     // Timer settings in minutes
     const timerSettings: TimerSettings = {
-        pomodoro: isDebugMode ? 1 : 25, // 1 minute in debug mode, 25 minutes normally
+        pomodoro: isDebugMode ? 0.5 : 25, // 30 seconds in debug mode, 25 minutes normally
         shortBreak: isDebugMode ? 1/6 : 5, // 10 seconds in debug mode, 5 minutes normally
-        longBreak: isDebugMode ? 2/6 : 15, // 20 seconds in debug mode, 15 minutes normally
+        longBreak: isDebugMode ? 0.25 : 15, // 15 seconds in debug mode, 15 minutes normally
     };
 
     const [mode, setMode] = useState<TimerMode>("pomodoro");
@@ -40,6 +40,8 @@ const PomodoroFlow = () => {
     const [isActive, setIsActive] = useState(false);
     const [completedPomodoros, setCompletedPomodoros] = useState(0);
     const [theme, setTheme] = useState<string>("minimal");
+    const [showNotification, setShowNotification] = useState(false);
+    const [notificationMessage, setNotificationMessage] = useState("");
 
     // Sound effects
     const timerCompleteSound = useRef<HTMLAudioElement | null>(null);
@@ -66,6 +68,18 @@ const PomodoroFlow = () => {
 
             if (mode === "pomodoro") {
                 setCompletedPomodoros(completedPomodoros + 1);
+                
+                // Display notification
+                setNotificationMessage("Focus session complete! Time for a break.");
+                setShowNotification(true);
+                
+                // Request browser notification if supported
+                if ("Notification" in window && Notification.permission === "granted") {
+                    new Notification("Pomodoro Flow", {
+                        body: "Focus session complete! Time for a break.",
+                        icon: "/favicon.ico"
+                    });
+                }
 
                 // After 4 pomodoros, take a long break
                 if ((completedPomodoros + 1) % 4 === 0) {
@@ -76,18 +90,42 @@ const PomodoroFlow = () => {
                     setTimeLeft(timerSettings.shortBreak * 60);
                 }
             } else {
+                // Display notification for break completion
+                setNotificationMessage("Break time over! Ready to focus again?");
+                setShowNotification(true);
+                
+                // Request browser notification if supported
+                if ("Notification" in window && Notification.permission === "granted") {
+                    new Notification("Pomodoro Flow", {
+                        body: "Break time over! Ready to focus again?",
+                        icon: "/favicon.ico"
+                    });
+                }
+                
                 // After break, switch back to pomodoro
                 setMode("pomodoro");
                 setTimeLeft(timerSettings.pomodoro * 60);
             }
 
             setIsActive(false);
+            
+            // Hide notification after 5 seconds
+            setTimeout(() => {
+                setShowNotification(false);
+            }, 5000);
         }
 
         return () => {
             if (interval) clearInterval(interval);
         };
     }, [isActive, timeLeft, mode, completedPomodoros, timerSettings]);
+    
+    // Request notification permission on component mount
+    useEffect(() => {
+        if ("Notification" in window && Notification.permission !== "denied") {
+            Notification.requestPermission();
+        }
+    }, []);
 
     // Update timeLeft when timerSettings or mode changes
     useEffect(() => {
@@ -285,6 +323,18 @@ const PomodoroFlow = () => {
                         </button>
                     </div>
                 </div>
+                
+                {/* Notification popup */}
+                {showNotification && (
+                    <div className="fixed top-5 right-5 left-5 mx-auto max-w-md bg-white/90 dark:bg-gray-800/90 text-gray-800 dark:text-white p-4 rounded-xl shadow-lg transform transition-transform duration-500 animate-bounce">
+                        <div className="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                            </svg>
+                            <p className="font-medium">{notificationMessage}</p>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
