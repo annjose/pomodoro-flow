@@ -136,12 +136,12 @@ const LofiPomodoro = () => {
         <div
             className={`min-h-screen flex justify-center items-center transition-colors duration-2000 ${
                 theme === "sunset"
-                    ? "bg-gradient-to-tr from-rose-300 to-orange-200 text-rose-900"
+                    ? "bg-gradient-to-tr from-yellow-400 to-red-500 text-yellow-900"
                     : theme === "midnight"
-                    ? "bg-gradient-to-tr from-cyan-400 to-indigo-900 text-white"
+                    ? "bg-gradient-to-tr from-purple-800 to-black text-white"
                     : theme === "forest"
-                    ? "bg-gradient-to-tr from-lime-300 to-emerald-200 text-emerald-900"
-                    : "bg-gradient-to-tr from-blue-300 to-sky-200 text-blue-900"
+                    ? "bg-gradient-to-tr from-green-600 to-green-900 text-green-100"
+                    : "bg-gradient-to-tr from-blue-600 to-blue-900 text-blue-100"
             }`}
         >
             <div className="bg-white/15 backdrop-blur-md rounded-3xl p-8 shadow-lg w-11/12 max-w-md text-center">
