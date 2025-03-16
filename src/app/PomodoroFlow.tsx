@@ -14,6 +14,16 @@ const PomodoroFlow = () => {
     // Check for debug mode from query parameter
     const [isDebugMode, setIsDebugMode] = useState(false);
     
+    // Customizable timer settings
+    const [customSettings, setCustomSettings] = useState<TimerSettings>({
+        pomodoro: 25,
+        shortBreak: 5,
+        longBreak: 15,
+    });
+    
+    // Show settings modal
+    const [showSettings, setShowSettings] = useState(false);
+    
     // Effect to check for debug parameter in URL and set initial timer values
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -30,9 +40,9 @@ const PomodoroFlow = () => {
     
     // Timer settings in minutes
     const timerSettings: TimerSettings = {
-        pomodoro: isDebugMode ? 0.5 : 25, // 30 seconds in debug mode, 25 minutes normally
-        shortBreak: isDebugMode ? 1/6 : 5, // 10 seconds in debug mode, 5 minutes normally
-        longBreak: isDebugMode ? 0.25 : 15, // 15 seconds in debug mode, 15 minutes normally
+        pomodoro: isDebugMode ? 0.5 : customSettings.pomodoro, // 30 seconds in debug mode
+        shortBreak: isDebugMode ? 1/6 : customSettings.shortBreak, // 10 seconds in debug mode
+        longBreak: isDebugMode ? 0.25 : customSettings.longBreak, // 15 seconds in debug mode
     };
 
     const [mode, setMode] = useState<TimerMode>("pomodoro");
@@ -213,6 +223,27 @@ const PomodoroFlow = () => {
         setTheme(themes[nextIndex]);
     };
 
+    // Save custom settings and close modal
+    const saveSettings = (newSettings: TimerSettings) => {
+        setCustomSettings(newSettings);
+        setShowSettings(false);
+        
+        // Reset timer with new settings if not active
+        if (!isActive) {
+            switch (mode) {
+                case "pomodoro":
+                    setTimeLeft(isDebugMode ? 30 : newSettings.pomodoro * 60);
+                    break;
+                case "shortBreak":
+                    setTimeLeft(isDebugMode ? 10 : newSettings.shortBreak * 60);
+                    break;
+                case "longBreak":
+                    setTimeLeft(isDebugMode ? 15 : newSettings.longBreak * 60);
+                    break;
+            }
+        }
+    };
+
     return (
         <div
             className={`min-h-screen flex flex-col justify-center items-center transition-colors duration-2000 ${
@@ -236,6 +267,15 @@ const PomodoroFlow = () => {
                         Pomodoro Flow
                     </h1>
                     <div className="flex items-center gap-3">
+                        <button
+                            onClick={() => setShowSettings(true)}
+                            className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl text-sm font-medium transition-all"
+                            title="Customize timer durations"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
+                            </svg>
+                        </button>
                         <span className="text-xs opacity-60 italic">
                             {theme.charAt(0).toUpperCase() + theme.slice(1)} vibe
                         </span>
@@ -324,6 +364,95 @@ const PomodoroFlow = () => {
                     </div>
                 </div>
                 
+                {/* Settings Modal */}
+                {showSettings && (
+                    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+                        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 w-full max-w-md mx-4">
+                            <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Timer Settings</h2>
+                            
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-gray-700 dark:text-gray-300 mb-1 text-sm font-medium">
+                                        Focus Duration (minutes)
+                                    </label>
+                                    <input 
+                                        type="number" 
+                                        min="1"
+                                        max="60"
+                                        value={customSettings.pomodoro}
+                                        onChange={(e) => setCustomSettings({
+                                            ...customSettings, 
+                                            pomodoro: Number(e.target.value)
+                                        })}
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                    />
+                                </div>
+                                
+                                <div>
+                                    <label className="block text-gray-700 dark:text-gray-300 mb-1 text-sm font-medium">
+                                        Short Break Duration (minutes)
+                                    </label>
+                                    <input 
+                                        type="number"
+                                        min="1"
+                                        max="15" 
+                                        value={customSettings.shortBreak}
+                                        onChange={(e) => setCustomSettings({
+                                            ...customSettings, 
+                                            shortBreak: Number(e.target.value)
+                                        })}
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                    />
+                                </div>
+                                
+                                <div>
+                                    <label className="block text-gray-700 dark:text-gray-300 mb-1 text-sm font-medium">
+                                        Long Break Duration (minutes)
+                                    </label>
+                                    <input 
+                                        type="number"
+                                        min="1"
+                                        max="30" 
+                                        value={customSettings.longBreak}
+                                        onChange={(e) => setCustomSettings({
+                                            ...customSettings, 
+                                            longBreak: Number(e.target.value)
+                                        })}
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                    />
+                                </div>
+                            </div>
+                            
+                            <div className="mt-6 flex justify-end space-x-3">
+                                <button 
+                                    onClick={() => setShowSettings(false)}
+                                    className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg"
+                                >
+                                    Cancel
+                                </button>
+                                <button 
+                                    onClick={() => saveSettings(customSettings)}
+                                    className={`px-4 py-2 text-white rounded-lg ${
+                                        theme === "synthwave"
+                                            ? "bg-purple-600 hover:bg-purple-700"
+                                            : theme === "cafe"
+                                            ? "bg-amber-600 hover:bg-amber-700"
+                                            : theme === "cosmic"
+                                            ? "bg-blue-700 hover:bg-blue-800"
+                                            : theme === "minimal"
+                                            ? "bg-gray-600 hover:bg-gray-700"
+                                            : theme === "lofi"
+                                            ? "bg-slate-600 hover:bg-slate-700"
+                                            : "bg-emerald-600 hover:bg-emerald-700"
+                                    }`}
+                                >
+                                    Save
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 {/* Notification popup */}
                 {showNotification && (
                     <div className="fixed top-5 right-5 left-5 mx-auto max-w-md bg-white/90 dark:bg-gray-800/90 text-gray-800 dark:text-white p-4 rounded-xl shadow-lg transform transition-transform duration-500 animate-bounce">
