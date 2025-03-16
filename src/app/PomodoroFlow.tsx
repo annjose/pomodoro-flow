@@ -8,6 +8,7 @@ interface TimerSettings {
     pomodoro: number;
     shortBreak: number;
     longBreak: number;
+    sessionsPerCycle: number;
 }
 
 const PomodoroFlow = () => {
@@ -19,6 +20,7 @@ const PomodoroFlow = () => {
         pomodoro: 25,
         shortBreak: 5,
         longBreak: 15,
+        sessionsPerCycle: 4,
     });
     
     // Show settings modal
@@ -53,6 +55,7 @@ const PomodoroFlow = () => {
         pomodoro: isDebugMode ? 0.5 : customSettings.pomodoro, // 30 seconds in debug mode
         shortBreak: isDebugMode ? 1/6 : customSettings.shortBreak, // 10 seconds in debug mode
         longBreak: isDebugMode ? 0.25 : customSettings.longBreak, // 15 seconds in debug mode
+        sessionsPerCycle: customSettings.sessionsPerCycle,
     };
 
     const [mode, setMode] = useState<TimerMode>("pomodoro");
@@ -101,8 +104,8 @@ const PomodoroFlow = () => {
                     });
                 }
 
-                // After 4 pomodoros, take a long break
-                if ((completedPomodoros + 1) % 4 === 0) {
+                // After n pomodoros, take a long break
+                if ((completedPomodoros + 1) % timerSettings.sessionsPerCycle === 0) {
                     setMode("longBreak");
                     setTimeLeft(timerSettings.longBreak * 60);
                 } else {
@@ -306,11 +309,11 @@ const PomodoroFlow = () => {
                             {formatTime()}
                         </div>
                         <div className="flex gap-3 justify-center mb-8">
-                            {[...Array(4)].map((_, i) => (
+                            {[...Array(timerSettings.sessionsPerCycle)].map((_, i) => (
                                 <div 
                                     key={i}
                                     className={`w-4 h-4 rounded-full border ${
-                                        i < completedPomodoros % 4 
+                                        i < completedPomodoros % timerSettings.sessionsPerCycle 
                                             ? theme === "minimal" 
                                                 ? "bg-gray-600 border-gray-700" 
                                                 : "bg-white border-white/50" 
@@ -345,8 +348,9 @@ const PomodoroFlow = () => {
 
                 {/* Footer */}
                 <div className="p-6 border-t border-white/20 flex justify-between items-center">
-                    <div className="flex items-center gap-3">
-                        <span className="font-medium">Total: {completedPomodoros}</span>
+                    <div className="flex items-center gap-2">
+                        <span className="font-medium">Sessions: {completedPomodoros % timerSettings.sessionsPerCycle}/{timerSettings.sessionsPerCycle}</span>
+                        <span className="text-xs opacity-70">(Cycle {Math.floor(completedPomodoros / timerSettings.sessionsPerCycle) + 1})</span>
                     </div>
                     <div className="flex bg-white/10 rounded-xl p-1">
                         <button
@@ -467,6 +471,57 @@ const PomodoroFlow = () => {
                                             </div>
                                             <span className="text-xs text-gray-500 dark:text-gray-400">min</span>
                                         </div>
+                                    </div>
+                                </div>
+                                
+                                <div className="timer-setting border-t border-gray-200 dark:border-gray-700 pt-4">
+                                    <div className="flex flex-col mb-2">
+                                        <label className="text-gray-700 dark:text-gray-300 text-base font-medium mb-3">
+                                            Sessions Per Cycle
+                                        </label>
+                                        <div className="flex items-center justify-center">
+                                            <div className="flex shadow-sm">
+                                                <button 
+                                                    onClick={() => setCustomSettings({
+                                                        ...customSettings, 
+                                                        sessionsPerCycle: Math.max(1, customSettings.sessionsPerCycle - 1)
+                                                    })}
+                                                    className="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 px-3 py-2 rounded-l-md text-gray-700 dark:text-gray-200"
+                                                >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                                        <path fillRule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+                                                    </svg>
+                                                </button>
+                                                <input 
+                                                    type="number" 
+                                                    min="1"
+                                                    max="8"
+                                                    value={customSettings.sessionsPerCycle}
+                                                    onChange={(e) => {
+                                                        const value = parseInt(e.target.value);
+                                                        if (value >= 1 && value <= 8) {
+                                                            setCustomSettings({
+                                                                ...customSettings, 
+                                                                sessionsPerCycle: value
+                                                            });
+                                                        }
+                                                    }}
+                                                    className="w-16 text-center font-mono rounded-none bg-gray-100 dark:bg-gray-700 border-x border-gray-300 dark:border-gray-600 py-2 text-sm text-gray-800 dark:text-white"
+                                                />
+                                                <button 
+                                                    onClick={() => setCustomSettings({
+                                                        ...customSettings, 
+                                                        sessionsPerCycle: Math.min(8, customSettings.sessionsPerCycle + 1)
+                                                    })}
+                                                    className="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 px-3 py-2 rounded-r-md text-gray-700 dark:text-gray-200"
+                                                >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                                        <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-2">Number of focus sessions before a long break</p>
                                     </div>
                                 </div>
                             </div>
