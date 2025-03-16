@@ -382,73 +382,97 @@ const PomodoroFlow = () => {
                     >
                         <div 
                             ref={modalContentRef}
-                            className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 w-full max-w-md mx-4"
+                            className="bg-white/95 dark:bg-gray-800/95 rounded-3xl shadow-xl p-8 w-full max-w-md mx-4 backdrop-blur-sm"
                         >
-                            <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Timer Settings</h2>
+                            <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">Timer Settings</h2>
                             
-                            <div className="space-y-4">
-                                <div>
-                                    <label className="block text-gray-700 dark:text-gray-300 mb-1 text-sm font-medium">
-                                        Focus Duration (minutes)
-                                    </label>
-                                    <input 
-                                        type="number" 
-                                        min="1"
-                                        max="60"
-                                        value={customSettings.pomodoro}
-                                        onChange={(e) => setCustomSettings({
-                                            ...customSettings, 
-                                            pomodoro: Number(e.target.value)
-                                        })}
-                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                                    />
+                            <div className="space-y-6">
+                                <div className="timer-setting">
+                                    <div className="flex justify-between items-center mb-2">
+                                        <label className="text-gray-700 dark:text-gray-300 text-base font-medium">
+                                            Focus Duration
+                                        </label>
+                                        <div className="flex items-center gap-2">
+                                            <input 
+                                                type="range" 
+                                                min="1"
+                                                max="60"
+                                                value={customSettings.pomodoro}
+                                                onChange={(e) => setCustomSettings({
+                                                    ...customSettings, 
+                                                    pomodoro: Number(e.target.value)
+                                                })}
+                                                className="w-32 accent-blue-600 dark:accent-blue-400"
+                                            />
+                                            <div className="w-12 text-center font-mono rounded bg-gray-100 dark:bg-gray-700 px-2 py-1 text-sm text-gray-800 dark:text-white">
+                                                {customSettings.pomodoro}
+                                            </div>
+                                            <span className="text-xs text-gray-500 dark:text-gray-400">min</span>
+                                        </div>
+                                    </div>
                                 </div>
                                 
-                                <div>
-                                    <label className="block text-gray-700 dark:text-gray-300 mb-1 text-sm font-medium">
-                                        Short Break Duration (minutes)
-                                    </label>
-                                    <input 
-                                        type="number"
-                                        min="1"
-                                        max="15" 
-                                        value={customSettings.shortBreak}
-                                        onChange={(e) => setCustomSettings({
-                                            ...customSettings, 
-                                            shortBreak: Number(e.target.value)
-                                        })}
-                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                                    />
+                                <div className="timer-setting">
+                                    <div className="flex justify-between items-center mb-2">
+                                        <label className="text-gray-700 dark:text-gray-300 text-base font-medium">
+                                            Short Break
+                                        </label>
+                                        <div className="flex items-center gap-2">
+                                            <input 
+                                                type="range"
+                                                min="1"
+                                                max="15" 
+                                                value={customSettings.shortBreak}
+                                                onChange={(e) => setCustomSettings({
+                                                    ...customSettings, 
+                                                    shortBreak: Number(e.target.value)
+                                                })}
+                                                className="w-32 accent-blue-600 dark:accent-blue-400"
+                                            />
+                                            <div className="w-12 text-center font-mono rounded bg-gray-100 dark:bg-gray-700 px-2 py-1 text-sm text-gray-800 dark:text-white">
+                                                {customSettings.shortBreak}
+                                            </div>
+                                            <span className="text-xs text-gray-500 dark:text-gray-400">min</span>
+                                        </div>
+                                    </div>
                                 </div>
                                 
-                                <div>
-                                    <label className="block text-gray-700 dark:text-gray-300 mb-1 text-sm font-medium">
-                                        Long Break Duration (minutes)
-                                    </label>
-                                    <input 
-                                        type="number"
-                                        min="1"
-                                        max="30" 
-                                        value={customSettings.longBreak}
-                                        onChange={(e) => setCustomSettings({
-                                            ...customSettings, 
-                                            longBreak: Number(e.target.value)
-                                        })}
-                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                                    />
+                                <div className="timer-setting">
+                                    <div className="flex justify-between items-center mb-2">
+                                        <label className="text-gray-700 dark:text-gray-300 text-base font-medium">
+                                            Long Break
+                                        </label>
+                                        <div className="flex items-center gap-2">
+                                            <input 
+                                                type="range"
+                                                min="1"
+                                                max="30" 
+                                                value={customSettings.longBreak}
+                                                onChange={(e) => setCustomSettings({
+                                                    ...customSettings, 
+                                                    longBreak: Number(e.target.value)
+                                                })}
+                                                className="w-32 accent-blue-600 dark:accent-blue-400"
+                                            />
+                                            <div className="w-12 text-center font-mono rounded bg-gray-100 dark:bg-gray-700 px-2 py-1 text-sm text-gray-800 dark:text-white">
+                                                {customSettings.longBreak}
+                                            </div>
+                                            <span className="text-xs text-gray-500 dark:text-gray-400">min</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             
-                            <div className="mt-6 flex justify-end space-x-3">
+                            <div className="mt-8 flex justify-end space-x-3">
                                 <button 
                                     onClick={() => setShowSettings(false)}
-                                    className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg"
+                                    className="px-5 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
                                 >
                                     Cancel
                                 </button>
                                 <button 
                                     onClick={() => saveSettings(customSettings)}
-                                    className={`px-4 py-2 text-white rounded-lg ${
+                                    className={`px-5 py-2 text-white rounded-lg transition-colors ${
                                         theme === "synthwave"
                                             ? "bg-purple-600 hover:bg-purple-700"
                                             : theme === "cafe"
