@@ -24,6 +24,16 @@ const PomodoroFlow = () => {
     // Show settings modal
     const [showSettings, setShowSettings] = useState(false);
     
+    // Reference to modal content
+    const modalContentRef = useRef<HTMLDivElement>(null);
+    
+    // Close modal when clicking outside of it
+    const handleModalBackdropClick = (e: React.MouseEvent) => {
+        if (modalContentRef.current && !modalContentRef.current.contains(e.target as Node)) {
+            setShowSettings(false);
+        }
+    };
+    
     // Effect to check for debug parameter in URL and set initial timer values
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -366,8 +376,14 @@ const PomodoroFlow = () => {
                 
                 {/* Settings Modal */}
                 {showSettings && (
-                    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-                        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 w-full max-w-md mx-4">
+                    <div 
+                        className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
+                        onClick={handleModalBackdropClick}
+                    >
+                        <div 
+                            ref={modalContentRef}
+                            className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 w-full max-w-md mx-4"
+                        >
                             <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Timer Settings</h2>
                             
                             <div className="space-y-4">
