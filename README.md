@@ -1,6 +1,7 @@
 # Pomodoro Flow
 
 A modern, customizable Pomodoro timer application built with Next.js, React, and TypeScript. Developed using [vibe coding](https://en.wikipedia.org/wiki/Vibe_coding) as an experiment. 
+A detailed write-up on how this was built is available at [my blog - Relfections](https://annjose.com/post/vibe-coding-pomodoro-app/).
 
 Pomodoro Flow helps you stay focused and productive by breaking your work into timed intervals separated by short breaks.
 
