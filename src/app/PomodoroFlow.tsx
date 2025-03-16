@@ -309,7 +309,15 @@ const PomodoroFlow = () => {
                             {[...Array(4)].map((_, i) => (
                                 <div 
                                     key={i}
-                                    className={`w-4 h-4 rounded-full ${i < completedPomodoros % 4 ? 'bg-white' : 'bg-white/20'}`}
+                                    className={`w-4 h-4 rounded-full border ${
+                                        i < completedPomodoros % 4 
+                                            ? theme === "minimal" 
+                                                ? "bg-gray-600 border-gray-700" 
+                                                : "bg-white border-white/50" 
+                                            : theme === "minimal" 
+                                                ? "bg-gray-300 border-gray-400"
+                                                : "bg-white/20 border-white/30"
+                                    }`}
                                 ></div>
                             ))}
                         </div>
