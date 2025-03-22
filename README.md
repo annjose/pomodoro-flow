@@ -16,6 +16,7 @@ This app is deployed on Netlify. Visit [my-pomodoro-flow.netlify.app](https://my
 - 📊 Session tracking and cycle progress visualization
 - 🔔 In-app notifications when timers complete
 - 🎵 Sound alerts for timer completion and button clicks
+- ❓ Comprehensive help guide with instructions and productivity tips
 - ⚡ Debug mode for testing (add `?debug=true` to URL)
 - 📱 Responsive design that works on all devices
 
@@ -116,3 +117,12 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ### Sounds
 - tada2.wav by jobro -- https://freesound.org/s/60444/ -- License: Attribution 3.0
+
+### Help and Instructions
+
+Click the question mark (?) icon in the top-right corner to open the help guide that includes:
+- Explanation of the Pomodoro technique
+- Instructions on using the app
+- Feature overview
+- Productivity tips
+- Keyboard shortcuts
