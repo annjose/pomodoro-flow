@@ -93,17 +93,9 @@ const PomodoroFlow = () => {
             if (mode === "pomodoro") {
                 setCompletedPomodoros(completedPomodoros + 1);
                 
-                // Display notification
+                // Display in-app notification only
                 setNotificationMessage("Focus session complete! Time for a break.");
                 setShowNotification(true);
-                
-                // Request browser notification if supported
-                if ("Notification" in window && Notification.permission === "granted") {
-                    new Notification("Pomodoro Flow", {
-                        body: "Focus session complete! Time for a break.",
-                        icon: "/favicon.ico"
-                    });
-                }
 
                 // After n pomodoros, take a long break
                 if ((completedPomodoros + 1) % timerSettings.sessionsPerCycle === 0) {
@@ -114,17 +106,9 @@ const PomodoroFlow = () => {
                     setTimeLeft(timerSettings.shortBreak * 60);
                 }
             } else {
-                // Display notification for break completion
+                // Display in-app notification only for break completion
                 setNotificationMessage("Break time over! Ready to focus again?");
                 setShowNotification(true);
-                
-                // Request browser notification if supported
-                if ("Notification" in window && Notification.permission === "granted") {
-                    new Notification("Pomodoro Flow", {
-                        body: "Break time over! Ready to focus again?",
-                        icon: "/favicon.ico"
-                    });
-                }
                 
                 // After break, switch back to pomodoro
                 setMode("pomodoro");
@@ -143,13 +127,6 @@ const PomodoroFlow = () => {
             if (interval) clearInterval(interval);
         };
     }, [isActive, timeLeft, mode, completedPomodoros, timerSettings]);
-    
-    // Request notification permission on component mount
-    useEffect(() => {
-        if ("Notification" in window && Notification.permission !== "denied") {
-            Notification.requestPermission();
-        }
-    }, []);
 
     // Update timeLeft when timerSettings or mode changes
     useEffect(() => {
