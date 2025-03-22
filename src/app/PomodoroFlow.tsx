@@ -68,14 +68,11 @@ const PomodoroFlow = () => {
 
     // Sound effects
     const timerCompleteSound = useRef<HTMLAudioElement | null>(null);
-    const buttonClickSound = useRef<HTMLAudioElement | null>(null);
 
     // Initialize audio on client side only
     useEffect(() => {
-        // Click sound by dersuperanton -- https://freesound.org/s/433641/ -- License: Attribution 4.0
         // tada2.wav by jobro -- https://freesound.org/s/60444/ -- License: Attribution 3.0
         timerCompleteSound.current = new Audio("/sounds/complete.wav");
-        buttonClickSound.current = new Audio("/sounds/click.wav");
     }, []);
 
     // Timer effect
@@ -181,7 +178,6 @@ const PomodoroFlow = () => {
 
     // Change timer mode
     const changeMode = (newMode: TimerMode) => {
-        buttonClickSound.current?.play();
         setIsActive(false); // First pause the current timer
         setMode(newMode);
 
@@ -206,13 +202,11 @@ const PomodoroFlow = () => {
 
     // Toggle timer
     const toggleTimer = () => {
-        buttonClickSound.current?.play();
         setIsActive(!isActive);
     };
 
     // Reset timer
     const resetTimer = () => {
-        buttonClickSound.current?.play();
         setIsActive(false);
 
         switch (mode) {

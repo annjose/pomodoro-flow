@@ -111,5 +111,8 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Acknowledgments
 
 - The Pomodoro Technique was developed by Francesco Cirillo
-- Sound effects: Click sound by dersuperanton (https://freesound.org/s/433641/) - License: Attribution 4.0
-- Sound effects: Tada sound by jobro (https://freesound.org/s/60444/) - License: Attribution 3.0
+
+## Attributions
+
+### Sounds
+- tada2.wav by jobro -- https://freesound.org/s/60444/ -- License: Attribution 3.0
