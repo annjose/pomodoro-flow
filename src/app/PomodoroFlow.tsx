@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import HelpModal from "../components/HelpModal";
 
 type TimerMode = "pomodoro" | "shortBreak" | "longBreak";
@@ -54,13 +54,13 @@ const PomodoroFlow = () => {
         }
     }, []);
     
-    // Timer settings in minutes
-    const timerSettings: TimerSettings = {
+    // Timer settings in minutes - wrap in useMemo to avoid recreation on every render
+    const timerSettings = useMemo(() => ({
         pomodoro: isDebugMode ? 0.5 : customSettings.pomodoro, // 30 seconds in debug mode
         shortBreak: isDebugMode ? 1/6 : customSettings.shortBreak, // 10 seconds in debug mode
         longBreak: isDebugMode ? 0.25 : customSettings.longBreak, // 15 seconds in debug mode
         sessionsPerCycle: customSettings.sessionsPerCycle,
-    };
+    }), [isDebugMode, customSettings.pomodoro, customSettings.shortBreak, customSettings.longBreak, customSettings.sessionsPerCycle]);
 
     const [mode, setMode] = useState<TimerMode>("pomodoro");
     const [timeLeft, setTimeLeft] = useState(0); // Start with 0 and let the useEffect set it correctly
@@ -169,7 +169,7 @@ const PomodoroFlow = () => {
         if (!isActive) {
             setTimeLeft(duration);
         }
-    }, [timerSettings, mode, isDebugMode]);
+    }, [timerSettings, mode, isActive]); // Add isActive to dependency array
 
     // Format time as mm:ss
     const formatTime = () => {
